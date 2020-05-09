@@ -1,48 +1,48 @@
-import {getRequest} from "./http";
-import { CompetitionsResponse, CountriesResponse, StandingsResponse, StatisticsResponse } from "./types";
+import 'es6-promise'
+import { getRequest } from './http'
+import { CompetitionsResponse, CountriesResponse, StandingsResponse, StatisticsResponse } from './types'
 
 export class MainService {
-
-    static APIKEY;
+    static APIKEY
 
     constructor(apiKey: string) {
-        if(!apiKey) {
+        if (!apiKey) {
             throw new Error('API KEY IS MISSING!')
         }
         MainService.APIKEY = apiKey
     }
 
-     /**
+    /**
      *  Returns list of support countries per subscription plan
      * @returns Resolves with API response or throw error
      */
     async getCountries() {
         try {
-            const action = 'get_countries';
+            const action = 'get_countries'
 
             const result = await getRequest(action)
-            const countries: CountriesResponse =  result.data
+            let countries: CountriesResponse = result.data
 
             return countries
-        } catch(err) {
+        } catch (err) {
             throw new Error(err)
         }
     }
 
-     /**
+    /**
      *  Returns list of supported competitions
      * @param {String} countryId If set only leagues from specific country will be returned (Optional)
      * @returns Resolves with API response or throw error
      */
-    async getCompetitions(countryId: string) {
+    async getCompetitions(countryId?: string) {
         try {
             const action = `get_leagues&country_id=${countryId}`
-    
+
             const result = await getRequest(action)
             const competitions: CompetitionsResponse = result.data
 
             return competitions
-        } catch(err) {
+        } catch (err) {
             throw new Error(err)
         }
     }
@@ -55,12 +55,12 @@ export class MainService {
     async getStandings(leagueId: string) {
         try {
             const action = `get_standings&league_id=${leagueId}`
-    
+
             const result = await getRequest(action)
             const standings: StandingsResponse = result.data
 
             return standings
-        } catch(err) {
+        } catch (err) {
             throw new Error(err)
         }
     }
@@ -76,13 +76,20 @@ export class MainService {
      * @returns Resolves with API response or throw error
      */
 
-    async getEvents(from: string = '', to: string = '', countryId: string = '', leagueId: string = '', matchId: string = '', teamId: string = '')  {
+    async getEvents(
+        from: string = '',
+        to: string = '',
+        countryId: string = '',
+        leagueId: string = '',
+        matchId: string = '',
+        teamId: string = '',
+    ) {
         try {
             const action = `get_events&from=${from}&to=${to}&country_id=${countryId}&league_id=${leagueId}&match_id=${matchId}&team_id=${teamId}`
-    
+
             const result = await getRequest(action)
             return result.data
-        } catch(err) {
+        } catch (err) {
             throw new Error(err)
         }
     }
@@ -95,14 +102,13 @@ export class MainService {
     async getStatistics(matchId: string) {
         try {
             const action = `get_statistics&match_id=${matchId}`
-    
+
             const result = await getRequest(action)
             const statistics: StatisticsResponse = result.data
 
             return statistics
-        } catch(err) {
+        } catch (err) {
             throw new Error(err)
         }
     }
-
 }
